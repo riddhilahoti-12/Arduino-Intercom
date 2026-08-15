@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let ambientNoiseFloor = 0.4;
   let realAudioEnabled = true;
   let autoDemoRunning = false;
+  let wavePhase = 0;
 
   // Web Audio Context for Real Synthesis
   let audioCtx = null;
@@ -299,8 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- CANVAS ANIMATIONS & OSCILLOSCOPE ---
-  let wavePhase = 0;
-
   function startMiniWaveformLoop() {
     function animate() {
       wavePhase += 0.15;
