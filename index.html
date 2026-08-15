@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Multi-Room Analog Intercom | Interactive Prototype & PBL Presentation</title>
+  <title>Smart Multi-Room Analog Intercom | Interactive 3D Real-Life Experience</title>
   
   <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="dark-mode">
 
   <!-- Top Navigation Header -->
   <header class="app-header">
     <div class="header-container">
       <div class="brand-logo">
         <div class="logo-icon">
-          <i class="fa-solid fa-microchip"></i>
+          <i class="fa-solid fa-house-laptop"></i>
         </div>
         <div class="logo-text">
-          <h1>SmartIntercom <span>3D Prototype</span></h1>
+          <h1>SmartIntercom <span class="badge-3d">3D Cinematic Experience</span></h1>
           <p class="subtitle">Multi-Room Analog Intercom with VAD & Priority Switching</p>
         </div>
       </div>
@@ -37,7 +37,7 @@
 
       <nav class="nav-tabs">
         <button class="nav-btn active" data-tab="simulator">
-          <i class="fa-solid fa-house-signal"></i> 3D Floorplan Sim
+          <i class="fa-solid fa-cube"></i> 3D Virtual House
         </button>
         <button class="nav-btn" data-tab="pipeline">
           <i class="fa-solid fa-wave-square"></i> Voice-to-DC Pipeline
@@ -48,8 +48,8 @@
         <button class="nav-btn" data-tab="diy-manual">
           <i class="fa-solid fa-tools"></i> DIY Assembly Guide
         </button>
-        <button class="nav-btn highlight" id="btn-demo-mode">
-          <i class="fa-solid fa-play"></i> Auto Demo
+        <button class="nav-btn highlight-video" id="btn-video-mode">
+          <i class="fa-solid fa-clapperboard"></i> 🎬 Watch Video Demo
         </button>
       </nav>
     </div>
@@ -57,48 +57,145 @@
 
   <main class="main-content">
 
-    <!-- ==================== TAB 1: 3D FLOORPLAN SIMULATOR ==================== -->
+    <!-- ==================== TAB 1: 3D VIRTUAL HOUSE SIMULATOR ==================== -->
     <section id="tab-simulator" class="tab-pane active">
-      <div class="sim-layout">
+      
+      <!-- Top Telemetry Header Bar -->
+      <div class="telemetry-bar card shadow">
+        <div class="telemetry-item">
+          <span class="t-label"><i class="fa-solid fa-satellite-dish"></i> Active Intercom Channel</span>
+          <span class="t-value highlight-green" id="tele-active-channel">IDLE / STANDBY</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="t-label"><i class="fa-solid fa-bolt"></i> Peak VAD DC Voltage</span>
+          <span class="t-value highlight-amber" id="tele-max-dc">0.12 V DC</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="t-label"><i class="fa-solid fa-microchip"></i> CD4051 Mux Address</span>
+          <span class="t-value code-font" id="tele-mux-pins">S0:0 S1:0 S2:0 (INH:1)</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="t-label"><i class="fa-solid fa-shield-halved"></i> Priority Resolver</span>
+          <span class="t-value" id="tele-priority-status">NO CONFLICT</span>
+        </div>
+      </div>
 
-        <!-- Left Sidebar: Controls & System Diagnostics -->
+      <div class="sim-layout-3d">
+
+        <!-- Left Sidebar: Controls & Interactive Room Triggers -->
         <aside class="sim-sidebar">
+          
+          <!-- Camera & Rendering Mode Controls -->
           <div class="card shadow">
             <div class="card-header">
-              <h3><i class="fa-solid fa-sliders"></i> Master Control Panel</h3>
-              <span class="pulse-indicator live">LIVE SYSTEM</span>
+              <h3><i class="fa-solid fa-video"></i> 3D Camera & Visual Mode</h3>
+            </div>
+            <div class="camera-mode-buttons">
+              <button class="btn btn-cam active" id="cam-iso"><i class="fa-solid fa-cube"></i> 3D Isometric</button>
+              <button class="btn btn-cam" id="cam-top"><i class="fa-solid fa-map"></i> Top-Down Plan</button>
+              <button class="btn btn-cam" id="cam-zoom"><i class="fa-solid fa-magnifying-glass"></i> Room Focus</button>
             </div>
             
-            <div class="control-group">
-              <label>Preset Test Scenarios:</label>
-              <div class="scenario-buttons">
-                <button class="btn btn-outline" id="scen-kitchen-bed2">
-                  <i class="fa-solid fa-comments"></i> Kitchen → Bedroom 2
-                </button>
-                <button class="btn btn-outline btn-warning" id="scen-master-override">
-                  <i class="fa-solid fa-triangle-exclamation"></i> Master Override
-                </button>
-                <button class="btn btn-outline btn-danger" id="scen-emergency-all">
-                  <i class="fa-solid fa-bullhorn"></i> Emergency Broadcast
-                </button>
-                <button class="btn btn-outline" id="scen-reset">
-                  <i class="fa-solid fa-rotate-left"></i> Reset to Idle
-                </button>
-              </div>
+            <div class="toggle-row margin-top-12">
+              <span><i class="fa-solid fa-moon"></i> Ambient Room Lights</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-night-mode" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
 
-            <div class="control-group">
-              <label for="slider-noise">Ambient Room Noise Floor (VAD Sensitivity):</label>
-              <input type="range" id="slider-noise" min="0.1" max="1.5" step="0.1" value="0.4">
-              <div class="range-labels">
-                <span>Quiet (0.1V)</span>
-                <span id="val-noise">0.4V DC</span>
-                <span>Noisy (1.5V)</span>
-              </div>
+            <div class="toggle-row margin-top-8">
+              <span><i class="fa-solid fa-atom"></i> Animated Audio Conduits</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-conduits" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
+          </div>
 
+          <!-- Quick Test Scenarios -->
+          <div class="card shadow margin-top-16">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-circle-play"></i> Interactive Scenarios</h3>
+            </div>
+            <div class="scenario-buttons">
+              <button class="btn btn-outline" id="scen-kitchen-bed2">
+                <i class="fa-solid fa-comments"></i> 1. Kitchen → Bedroom 2 Call
+              </button>
+              <button class="btn btn-outline btn-warning" id="scen-master-override">
+                <i class="fa-solid fa-triangle-exclamation"></i> 2. Master Priority Override
+              </button>
+              <button class="btn btn-outline btn-danger" id="scen-emergency-all">
+                <i class="fa-solid fa-bullhorn"></i> 3. All-Call Broadcast
+              </button>
+              <button class="btn btn-outline" id="scen-reset">
+                <i class="fa-solid fa-rotate-left"></i> Reset System
+              </button>
+            </div>
+          </div>
+
+          <!-- Room Intercom Quick Station List -->
+          <div class="card shadow margin-top-16">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-building-user"></i> Trigger Room Intercom</h3>
+            </div>
+            <div class="room-trigger-list">
+              
+              <button class="room-trig-item master-trig" id="trig-master">
+                <div class="trig-info">
+                  <span class="trig-name">Master Bedroom</span>
+                  <span class="trig-prio prio-1"><i class="fa-solid fa-crown"></i> Priority 1</span>
+                </div>
+                <span class="trig-btn"><i class="fa-solid fa-microphone"></i> Talk</span>
+              </button>
+
+              <button class="room-trig-item hall-trig" id="trig-hall">
+                <div class="trig-info">
+                  <span class="trig-name">Living Hall</span>
+                  <span class="trig-prio prio-2">Priority 2</span>
+                </div>
+                <span class="trig-btn"><i class="fa-solid fa-microphone"></i> Talk</span>
+              </button>
+
+              <button class="room-trig-item kitchen-trig" id="trig-kitchen">
+                <div class="trig-info">
+                  <span class="trig-name">Kitchen</span>
+                  <span class="trig-prio prio-3">Priority 3</span>
+                </div>
+                <span class="trig-btn"><i class="fa-solid fa-microphone"></i> Talk</span>
+              </button>
+
+              <button class="room-trig-item bed-trig" id="trig-bed2">
+                <div class="trig-info">
+                  <span class="trig-name">Bedroom 2</span>
+                  <span class="trig-prio prio-4">Priority 4</span>
+                </div>
+                <span class="trig-btn"><i class="fa-solid fa-microphone"></i> Talk</span>
+              </button>
+
+              <button class="room-trig-item bed-trig" id="trig-bed3">
+                <div class="trig-info">
+                  <span class="trig-name">Bedroom 3</span>
+                  <span class="trig-prio prio-4">Priority 4</span>
+                </div>
+                <span class="trig-btn"><i class="fa-solid fa-microphone"></i> Talk</span>
+              </button>
+
+              <button class="room-trig-item bed-trig" id="trig-bed4">
+                <div class="trig-info">
+                  <span class="trig-name">Bedroom 4</span>
+                  <span class="trig-prio prio-4">Priority 4</span>
+                </div>
+                <span class="trig-btn"><i class="fa-solid fa-microphone"></i> Talk</span>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Adjustments -->
+          <div class="card shadow margin-top-16">
             <div class="control-group">
-              <label for="slider-hangover">Speech Hangover Timer (Delay):</label>
+              <label for="slider-hangover">Speech Hold Timer (Delay):</label>
               <input type="range" id="slider-hangover" min="500" max="5000" step="250" value="2000">
               <div class="range-labels">
                 <span>0.5 sec</span>
@@ -106,267 +203,89 @@
                 <span>5.0 sec</span>
               </div>
             </div>
-
-            <!-- Central Hub Status -->
-            <div class="card sub-card inner-hub-card">
-              <h4><i class="fa-solid fa-brain"></i> Arduino Priority Logic Matrix</h4>
-              <div class="hub-metrics">
-                <div class="metric">
-                  <span class="m-label">Active Channel:</span>
-                  <span class="m-val highlight-val" id="hub-active-channel">IDLE</span>
-                </div>
-                <div class="metric">
-                  <span class="m-label">Priority Level:</span>
-                  <span class="m-val" id="hub-priority-level">NONE</span>
-                </div>
-                <div class="metric">
-                  <span class="m-label">CD4051 Pin State:</span>
-                  <span class="m-val code-font" id="hub-mux-pins">S0:0 S1:0 S2:0 (INH:1)</span>
-                </div>
-                <div class="metric">
-                  <span class="m-label">Highest DC Voltage:</span>
-                  <span class="m-val" id="hub-max-dc">0.12 V</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Real-time Audio Synthesizer Controls -->
-            <div class="card sub-card audio-synth-card">
-              <h4><i class="fa-solid fa-volume-high"></i> Audio Feedback Synthesizer</h4>
-              <div class="toggle-row">
-                <span>Enable Real Audio Tones</span>
-                <label class="switch">
-                  <input type="checkbox" id="toggle-real-audio" checked>
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <small class="muted-text">Simulates speaker output & mic chime using Web Audio API</small>
+            
+            <div class="toggle-row">
+              <span>Enable Real Audio Tones</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-real-audio" checked>
+                <span class="slider round"></span>
+              </label>
             </div>
           </div>
+
         </aside>
 
-        <!-- Main Center View: Interactive 3D / Isometric Floorplan -->
-        <main class="sim-view">
-          <div class="floorplan-container card shadow">
-            <div class="floorplan-header">
-              <div class="fp-title">
-                <h2><i class="fa-solid fa-layer-group"></i> 4BHK + Hall + Kitchen Interactive Mini-House Model</h2>
-                <p>Click talk on any room station to observe voice amplification, AC-to-DC VAD conversion, and priority routing.</p>
-              </div>
-              <div class="fp-legend">
-                <span class="leg-item master"><i class="fa-solid fa-crown"></i> Priority 1 (Master)</span>
-                <span class="leg-item hall"><i class="fa-solid fa-couch"></i> Priority 2 (Hall)</span>
-                <span class="leg-item kitchen"><i class="fa-solid fa-utensils"></i> Priority 3 (Kitchen)</span>
-                <span class="leg-item bedroom"><i class="fa-solid fa-bed"></i> Priority 4 (Bedrooms)</span>
-              </div>
+        <!-- Main Center View: Animated 3D House Rendering & Interactive Overlay -->
+        <main class="sim-view-3d card shadow">
+          
+          <div class="view-header">
+            <div class="vh-title">
+              <h2><i class="fa-solid fa-house-signal"></i> 3D Real-Life Architectural House Intercom Model</h2>
+              <p>Watch voice soundwaves convert to DC signals and travel through animated wall conduits in real-time.</p>
             </div>
-
-            <!-- 3D/Isometric Floorplan Grid -->
-            <div class="house-isometric-grid" id="house-grid">
-
-              <!-- ROOM 1: Master Bedroom (Priority 1) -->
-              <div class="room-card master-room" id="room-master" data-room="master" data-priority="1">
-                <div class="room-header">
-                  <span class="prio-badge prio-1"><i class="fa-solid fa-crown"></i> PRIORITY 1</span>
-                  <h3>Master Bedroom</h3>
-                </div>
-                <div class="room-body">
-                  <div class="room-hardware">
-                    <div class="hw-item mic-box" title="6mm Electret Mic + LM358 Preamp">
-                      <i class="fa-solid fa-microphone"></i>
-                      <span>Mic</span>
-                    </div>
-                    <div class="hw-item vad-box" title="1N4148 Diode Peak Detector">
-                      <i class="fa-solid fa-bolt"></i>
-                      <span class="dc-meter-read" id="dc-master">0.1V DC</span>
-                    </div>
-                    <div class="hw-item amp-box" title="LM386 200x Audio Amplifier">
-                      <i class="fa-solid fa-gauge-high"></i>
-                      <span>LM386</span>
-                    </div>
-                    <div class="hw-item spk-box" title="8 Ohm / 2W Mylar Speaker">
-                      <i class="fa-solid fa-volume-high"></i>
-                      <span>Spk</span>
-                    </div>
-                  </div>
-
-                  <!-- Waveform & Sound Animation -->
-                  <div class="signal-visualizer">
-                    <canvas class="mini-wave-canvas" id="canvas-master" width="200" height="40"></canvas>
-                    <div class="sound-ripples" id="ripple-master">
-                      <span></span><span></span><span></span>
-                    </div>
-                  </div>
-
-                  <div class="room-status-badge idle" id="status-master">IDLE</div>
-
-                  <div class="room-actions">
-                    <button class="btn btn-talk btn-master-talk" id="btn-talk-master">
-                      <i class="fa-solid fa-microphone"></i> TALK (Priority 1)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROOM 2: Living Hall (Priority 2) -->
-              <div class="room-card hall-room" id="room-hall" data-room="hall" data-priority="2">
-                <div class="room-header">
-                  <span class="prio-badge prio-2"><i class="fa-solid fa-shield"></i> PRIORITY 2</span>
-                  <h3>Living Hall</h3>
-                </div>
-                <div class="room-body">
-                  <div class="room-hardware">
-                    <div class="hw-item mic-box"><i class="fa-solid fa-microphone"></i><span>Mic</span></div>
-                    <div class="hw-item vad-box"><i class="fa-solid fa-bolt"></i><span class="dc-meter-read" id="dc-hall">0.1V DC</span></div>
-                    <div class="hw-item amp-box"><i class="fa-solid fa-gauge-high"></i><span>LM386</span></div>
-                    <div class="hw-item spk-box"><i class="fa-solid fa-volume-high"></i><span>Spk</span></div>
-                  </div>
-
-                  <div class="signal-visualizer">
-                    <canvas class="mini-wave-canvas" id="canvas-hall" width="200" height="40"></canvas>
-                    <div class="sound-ripples" id="ripple-hall"><span></span><span></span><span></span></div>
-                  </div>
-
-                  <div class="room-status-badge idle" id="status-hall">IDLE</div>
-
-                  <div class="room-actions">
-                    <button class="btn btn-talk" id="btn-talk-hall">
-                      <i class="fa-solid fa-microphone"></i> TALK (Priority 2)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROOM 3: Kitchen (Priority 3) -->
-              <div class="room-card kitchen-room" id="room-kitchen" data-room="kitchen" data-priority="3">
-                <div class="room-header">
-                  <span class="prio-badge prio-3"><i class="fa-solid fa-utensils"></i> PRIORITY 3</span>
-                  <h3>Kitchen</h3>
-                </div>
-                <div class="room-body">
-                  <div class="room-hardware">
-                    <div class="hw-item mic-box"><i class="fa-solid fa-microphone"></i><span>Mic</span></div>
-                    <div class="hw-item vad-box"><i class="fa-solid fa-bolt"></i><span class="dc-meter-read" id="dc-kitchen">0.1V DC</span></div>
-                    <div class="hw-item amp-box"><i class="fa-solid fa-gauge-high"></i><span>LM386</span></div>
-                    <div class="hw-item spk-box"><i class="fa-solid fa-volume-high"></i><span>Spk</span></div>
-                  </div>
-
-                  <div class="signal-visualizer">
-                    <canvas class="mini-wave-canvas" id="canvas-kitchen" width="200" height="40"></canvas>
-                    <div class="sound-ripples" id="ripple-kitchen"><span></span><span></span><span></span></div>
-                  </div>
-
-                  <div class="room-status-badge idle" id="status-kitchen">IDLE</div>
-
-                  <div class="room-actions">
-                    <button class="btn btn-talk" id="btn-talk-kitchen">
-                      <i class="fa-solid fa-microphone"></i> TALK (Priority 3)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROOM 4: Bedroom 2 (Priority 4) -->
-              <div class="room-card bedroom-room" id="room-bed2" data-room="bed2" data-priority="4">
-                <div class="room-header">
-                  <span class="prio-badge prio-4">PRIORITY 4</span>
-                  <h3>Bedroom 2</h3>
-                </div>
-                <div class="room-body">
-                  <div class="room-hardware">
-                    <div class="hw-item mic-box"><i class="fa-solid fa-microphone"></i><span>Mic</span></div>
-                    <div class="hw-item vad-box"><i class="fa-solid fa-bolt"></i><span class="dc-meter-read" id="dc-bed2">0.1V DC</span></div>
-                    <div class="hw-item amp-box"><i class="fa-solid fa-gauge-high"></i><span>LM386</span></div>
-                    <div class="hw-item spk-box"><i class="fa-solid fa-volume-high"></i><span>Spk</span></div>
-                  </div>
-
-                  <div class="signal-visualizer">
-                    <canvas class="mini-wave-canvas" id="canvas-bed2" width="200" height="40"></canvas>
-                    <div class="sound-ripples" id="ripple-bed2"><span></span><span></span><span></span></div>
-                  </div>
-
-                  <div class="room-status-badge idle" id="status-bed2">IDLE</div>
-
-                  <div class="room-actions">
-                    <button class="btn btn-talk" id="btn-talk-bed2">
-                      <i class="fa-solid fa-microphone"></i> TALK (Priority 4)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROOM 5: Bedroom 3 (Priority 4) -->
-              <div class="room-card bedroom-room" id="room-bed3" data-room="bed3" data-priority="4">
-                <div class="room-header">
-                  <span class="prio-badge prio-4">PRIORITY 4</span>
-                  <h3>Bedroom 3</h3>
-                </div>
-                <div class="room-body">
-                  <div class="room-hardware">
-                    <div class="hw-item mic-box"><i class="fa-solid fa-microphone"></i><span>Mic</span></div>
-                    <div class="hw-item vad-box"><i class="fa-solid fa-bolt"></i><span class="dc-meter-read" id="dc-bed3">0.1V DC</span></div>
-                    <div class="hw-item amp-box"><i class="fa-solid fa-gauge-high"></i><span>LM386</span></div>
-                    <div class="hw-item spk-box"><i class="fa-solid fa-volume-high"></i><span>Spk</span></div>
-                  </div>
-
-                  <div class="signal-visualizer">
-                    <canvas class="mini-wave-canvas" id="canvas-bed3" width="200" height="40"></canvas>
-                    <div class="sound-ripples" id="ripple-bed3"><span></span><span></span><span></span></div>
-                  </div>
-
-                  <div class="room-status-badge idle" id="status-bed3">IDLE</div>
-
-                  <div class="room-actions">
-                    <button class="btn btn-talk" id="btn-talk-bed3">
-                      <i class="fa-solid fa-microphone"></i> TALK (Priority 4)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROOM 6: Bedroom 4 (Priority 4) -->
-              <div class="room-card bedroom-room" id="room-bed4" data-room="bed4" data-priority="4">
-                <div class="room-header">
-                  <span class="prio-badge prio-4">PRIORITY 4</span>
-                  <h3>Bedroom 4</h3>
-                </div>
-                <div class="room-body">
-                  <div class="room-hardware">
-                    <div class="hw-item mic-box"><i class="fa-solid fa-microphone"></i><span>Mic</span></div>
-                    <div class="hw-item vad-box"><i class="fa-solid fa-bolt"></i><span class="dc-meter-read" id="dc-bed4">0.1V DC</span></div>
-                    <div class="hw-item amp-box"><i class="fa-solid fa-gauge-high"></i><span>LM386</span></div>
-                    <div class="hw-item spk-box"><i class="fa-solid fa-volume-high"></i><span>Spk</span></div>
-                  </div>
-
-                  <div class="signal-visualizer">
-                    <canvas class="mini-wave-canvas" id="canvas-bed4" width="200" height="40"></canvas>
-                    <div class="sound-ripples" id="ripple-bed4"><span></span><span></span><span></span></div>
-                  </div>
-
-                  <div class="room-status-badge idle" id="status-bed4">IDLE</div>
-
-                  <div class="room-actions">
-                    <button class="btn btn-talk" id="btn-talk-bed4">
-                      <i class="fa-solid fa-microphone"></i> TALK (Priority 4)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-            </div> <!-- /house-isometric-grid -->
-
-            <!-- Central Microcontroller & Switch Hub Graphic -->
-            <div class="central-switch-hub">
-              <div class="hub-header">
-                <i class="fa-solid fa-microchip"></i>
-                <span>Arduino Uno R3 + CD4051BE Analog Multiplexer Matrix Hub</span>
-              </div>
-              <div class="hub-wiring-canvas-wrapper">
-                <canvas id="hub-wiring-canvas" width="900" height="120"></canvas>
-              </div>
+            <div class="vh-controls">
+              <span class="live-tag"><i class="fa-solid fa-circle"></i> 60 FPS 3D ENGINE</span>
             </div>
-
           </div>
+
+          <!-- Interactive 3D Canvas Stage -->
+          <div class="canvas-3d-stage" id="canvas-stage">
+            
+            <canvas id="house-3d-canvas" width="1150" height="680"></canvas>
+
+            <!-- Video Overlay Banner during Auto Demo Mode -->
+            <div class="video-overlay-banner" id="video-banner">
+              <div class="vb-icon"><i class="fa-solid fa-clapperboard"></i></div>
+              <div class="vb-text">
+                <h4 id="vb-title">CINEMATIC VIDEO WALKTHROUGH MODE</h4>
+                <p id="vb-desc">Scene 1: Kitchen initiating inter-room voice call...</p>
+              </div>
+              <div class="vb-progress-bar"><div class="vb-fill" id="vb-fill"></div></div>
+            </div>
+
+            <!-- Floating Picture-in-Picture PIP Room Camera HUD -->
+            <div class="pip-camera-hud" id="pip-camera">
+              <div class="pip-header">
+                <span class="pip-title" id="pip-title"><i class="fa-solid fa-camera"></i> LIVE ROOM FEED: KITCHEN</span>
+                <button class="pip-close" id="pip-close">&times;</button>
+              </div>
+              <div class="pip-body">
+                <div class="pip-status-badge" id="pip-status">TRANSMITTING</div>
+                <div class="pip-metrics">
+                  <div class="pm-item">
+                    <span>Mic AC Level:</span>
+                    <strong id="pip-ac">2.45 V AC</strong>
+                  </div>
+                  <div class="pm-item">
+                    <span>Peak DC VAD:</span>
+                    <strong id="pip-dc" class="highlight-amber">3.92 V DC</strong>
+                  </div>
+                </div>
+                <!-- Mini Audio Spectrum Canvas -->
+                <canvas id="pip-spectrum-canvas" width="260" height="50"></canvas>
+              </div>
+            </div>
+
+          </div> <!-- /canvas-3d-stage -->
+
+          <!-- Circuit Bus Status Drawer -->
+          <div class="hub-drawer">
+            <div class="hd-title">
+              <i class="fa-solid fa-microchip"></i>
+              <span>CENTRAL CONTROL MATRIX (Arduino Uno + CD4051BE + LM358 + LM386)</span>
+            </div>
+            <div class="hd-pins">
+              <span class="pin-tag">A0: Master VAD</span>
+              <span class="pin-tag">A1: Hall VAD</span>
+              <span class="pin-tag">A2: Kitchen VAD</span>
+              <span class="pin-tag">A3: Bed2 VAD</span>
+              <span class="pin-tag active-pin">D2 (S0)</span>
+              <span class="pin-tag active-pin">D3 (S1)</span>
+              <span class="pin-tag">D4 (S2)</span>
+              <span class="pin-tag active-pin">D5 (INH Enable)</span>
+            </div>
+          </div>
+
         </main>
       </div>
     </section>
@@ -383,7 +302,6 @@
         <!-- Interactive 5-Stage Electronics Pipeline -->
         <div class="pipeline-flow-grid">
           
-          <!-- Stage 1 -->
           <div class="pipe-stage-card" id="stage-1">
             <div class="stage-num">01</div>
             <div class="stage-icon"><i class="fa-solid fa-microphone"></i></div>
@@ -394,7 +312,6 @@
 
           <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 
-          <!-- Stage 2 -->
           <div class="pipe-stage-card" id="stage-2">
             <div class="stage-num">02</div>
             <div class="stage-icon"><i class="fa-solid fa-wave-square"></i></div>
@@ -405,7 +322,6 @@
 
           <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 
-          <!-- Stage 3 (Crucial Conversion) -->
           <div class="pipe-stage-card highlight-stage" id="stage-3">
             <div class="stage-num">03</div>
             <div class="stage-icon"><i class="fa-solid fa-bolt"></i></div>
@@ -416,7 +332,6 @@
 
           <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 
-          <!-- Stage 4 -->
           <div class="pipe-stage-card" id="stage-4">
             <div class="stage-num">04</div>
             <div class="stage-icon"><i class="fa-solid fa-microchip"></i></div>
@@ -427,7 +342,6 @@
 
           <div class="pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 
-          <!-- Stage 5 -->
           <div class="pipe-stage-card" id="stage-5">
             <div class="stage-num">05</div>
             <div class="stage-icon"><i class="fa-solid fa-volume-high"></i></div>
@@ -436,9 +350,9 @@
             <div class="stage-spec">Power: 2W Mylar Cone</div>
           </div>
 
-        </div> <!-- /pipeline-flow-grid -->
+        </div>
 
-        <!-- Dual Oscilloscope Realtime Canvas -->
+        <!-- Oscilloscope -->
         <div class="oscilloscope-wrapper">
           <div class="osc-header">
             <h3><i class="fa-solid fa-chart-line"></i> Real-Time Signal Oscilloscope & DC Level Comparator</h3>
@@ -523,7 +437,6 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Row 1 -->
               <tr>
                 <td>1</td>
                 <td><strong>Microcontroller Board</strong></td>
@@ -533,7 +446,6 @@
                 <td><strong>450</strong></td>
                 <td>Reads DC VAD levels, evaluates room priority matrix, controls CD4051 switching pins.</td>
               </tr>
-              <!-- Row 2 -->
               <tr>
                 <td>2</td>
                 <td><strong>Analog Multiplexer IC</strong></td>
@@ -543,7 +455,6 @@
                 <td><strong>60</strong></td>
                 <td>Solid-state routing of analog mic audio to target room power amplifiers.</td>
               </tr>
-              <!-- Row 3 -->
               <tr>
                 <td>3</td>
                 <td><strong>Dual Op-Amp IC</strong></td>
@@ -553,7 +464,6 @@
                 <td><strong>60</strong></td>
                 <td>Amplifies electret mic voice AC signals from ~20mV to 2.5V AC levels.</td>
               </tr>
-              <!-- Row 4 -->
               <tr>
                 <td>4</td>
                 <td><strong>Audio Power Amp Module</strong></td>
@@ -563,7 +473,6 @@
                 <td><strong>180</strong></td>
                 <td>Drives 8 Ohm / 2W speakers with amplified audio output for each room.</td>
               </tr>
-              <!-- Row 5 -->
               <tr>
                 <td>5</td>
                 <td><strong>Electret Microphone</strong></td>
@@ -573,7 +482,6 @@
                 <td><strong>80</strong></td>
                 <td>Captures acoustic voice activity in rooms.</td>
               </tr>
-              <!-- Row 6 -->
               <tr>
                 <td>6</td>
                 <td><strong>Miniature Speaker</strong></td>
@@ -583,7 +491,6 @@
                 <td><strong>240</strong></td>
                 <td>Reproduces voice audio output inside rooms.</td>
               </tr>
-              <!-- Row 7 -->
               <tr>
                 <td>7</td>
                 <td><strong>Signal Diodes</strong></td>
@@ -593,7 +500,6 @@
                 <td><strong>20</strong></td>
                 <td>Rectifies AC audio signals into positive DC voltage pulses for VAD envelope detection.</td>
               </tr>
-              <!-- Row 8 -->
               <tr>
                 <td>8</td>
                 <td><strong>Resistor Assortment</strong></td>
@@ -603,7 +509,6 @@
                 <td><strong>100</strong></td>
                 <td>Sets Op-Amp gain, RC time constants, pull-up/pull-down bias circuitry.</td>
               </tr>
-              <!-- Row 9 -->
               <tr>
                 <td>9</td>
                 <td><strong>Capacitor Assortment</strong></td>
@@ -613,7 +518,6 @@
                 <td><strong>80</strong></td>
                 <td>Smooths DC envelope voltages and filters out AC ripple / noise.</td>
               </tr>
-              <!-- Row 10 -->
               <tr>
                 <td>10</td>
                 <td><strong>Sensitivity Trimmers</strong></td>
@@ -623,7 +527,6 @@
                 <td><strong>60</strong></td>
                 <td>Adjusts microphone sensitivity & VAD trigger thresholds for noisy environments.</td>
               </tr>
-              <!-- Row 11 -->
               <tr>
                 <td>11</td>
                 <td><strong>Interconnect Wiring</strong></td>
@@ -633,7 +536,6 @@
                 <td><strong>300</strong></td>
                 <td>Carries audio & VAD signals across rooms without picking up electromagnetic interference.</td>
               </tr>
-              <!-- Row 12 -->
               <tr>
                 <td>12</td>
                 <td><strong>Prototyping Board</strong></td>
@@ -643,7 +545,6 @@
                 <td><strong>250</strong></td>
                 <td>Physical circuit assembly & inter-module wiring connections.</td>
               </tr>
-              <!-- Row 13 -->
               <tr>
                 <td>13</td>
                 <td><strong>DC Power Supply</strong></td>
@@ -678,7 +579,6 @@
 
         <div class="diy-steps-list">
 
-          <!-- Step 1 -->
           <div class="diy-step-item">
             <div class="diy-num">1</div>
             <div class="diy-content">
@@ -693,7 +593,6 @@
             </div>
           </div>
 
-          <!-- Step 2 -->
           <div class="diy-step-item">
             <div class="diy-num">2</div>
             <div class="diy-content">
@@ -712,7 +611,6 @@
             </div>
           </div>
 
-          <!-- Step 3 -->
           <div class="diy-step-item">
             <div class="diy-num">3</div>
             <div class="diy-content">
@@ -727,7 +625,6 @@
             </div>
           </div>
 
-          <!-- Step 4 -->
           <div class="diy-step-item">
             <div class="diy-num">4</div>
             <div class="diy-content">
@@ -741,7 +638,6 @@
             </div>
           </div>
 
-          <!-- Step 5 -->
           <div class="diy-step-item">
             <div class="diy-num">5</div>
             <div class="diy-content">
@@ -754,15 +650,14 @@
             </div>
           </div>
 
-        </div> <!-- /diy-steps-list -->
+        </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
   <footer class="app-footer">
-    <p>Smart Multi-Room Analog Intercom Prototype & Presentation &copy; 2026 | KLH University Project Based Learning (PBL Review 1) - Riddhi Lahoti (2510040078)</p>
+    <p>Smart Multi-Room Analog Intercom 3D Real-Life Experience &copy; 2026 | KLH University Project Based Learning (PBL Review 1) - Riddhi Lahoti (2510040078)</p>
   </footer>
 
   <script src="app.js"></script>
