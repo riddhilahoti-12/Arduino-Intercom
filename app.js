@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SMART MULTI-ROOM INTERCOM - 3D REAL-LIFE CINEMATIC EXPERIENCE ENGINE
+   SMART MULTI-ROOM INTERCOM - LUXURY 3D ARCHITECTURAL RESIDENCE ENGINE
    PBL Review 1 - Riddhi Lahoti (2510040078) | KLH University
    ========================================================================== */
 
@@ -17,13 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let ambientNoiseFloor = 0.4;
   let realAudioEnabled = true;
   let autoVideoMode = false;
-  let videoStep = 0;
 
-  // Web Audio Synthesis Context
+  // Web Audio Context
   let audioCtx = null;
   let synthOscillator = null;
 
-  // 3D Canvas Reference
+  // Canvas References
   const mainCanvas = document.getElementById('house-3d-canvas');
   const ctx3d = mainCanvas?.getContext('2d');
 
@@ -33,42 +32,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const oscAcCtx = document.getElementById('osc-ac-canvas')?.getContext('2d');
   const oscDcCtx = document.getElementById('osc-dc-canvas')?.getContext('2d');
 
-  // --- ROOM DEFINITIONS WITH 3D COORDINATES & INTERIOR ASSETS ---
+  // --- ROOM DEFINITIONS WITH ARCHITECTURAL POSITIONS & INTERIOR ASSETS ---
   const rooms = {
     master: {
       id: 'master', name: 'Master Bedroom', priority: 1, muxCode: 'S0:0 S1:0 S2:0 (Y0)', state: 'idle', dcVoltage: 0.12, talkingTimer: null,
-      x: 100, y: 80, w: 320, h: 220, color: '#a855f7',
-      furniture: 'king-bed', micPos: { x: 390, y: 120 }, spkPos: { x: 390, y: 240 }
+      x: 80, y: 70, w: 340, h: 240, color: '#a855f7', floorType: 'wood-dark',
+      furniture: 'king-bed-suite', micPos: { x: 380, y: 110 }, spkPos: { x: 380, y: 250 }
     },
     hall: {
       id: 'hall', name: 'Living Hall', priority: 2, muxCode: 'S0:1 S1:0 S2:0 (Y1)', state: 'idle', dcVoltage: 0.10, talkingTimer: null,
-      x: 450, y: 80, w: 340, h: 220, color: '#38bdf8',
-      furniture: 'living-sofa', micPos: { x: 470, y: 120 }, spkPos: { x: 760, y: 240 }
+      x: 440, y: 70, w: 360, h: 240, color: '#38bdf8', floorType: 'wood-light',
+      furniture: 'living-lounge', micPos: { x: 460, y: 110 }, spkPos: { x: 770, y: 250 }
     },
     kitchen: {
       id: 'kitchen', name: 'Kitchen', priority: 3, muxCode: 'S0:0 S1:1 S2:0 (Y2)', state: 'idle', dcVoltage: 0.14, talkingTimer: null,
-      x: 820, y: 80, w: 230, h: 220, color: '#f59e0b',
-      furniture: 'kitchen-counter', micPos: { x: 840, y: 120 }, spkPos: { x: 1020, y: 240 }
+      x: 820, y: 70, w: 280, h: 240, color: '#f59e0b', floorType: 'marble-tile',
+      furniture: 'kitchen-island', micPos: { x: 840, y: 110 }, spkPos: { x: 1070, y: 250 }
     },
     bed2: {
       id: 'bed2', name: 'Bedroom 2', priority: 4, muxCode: 'S0:1 S1:1 S2:0 (Y3)', state: 'idle', dcVoltage: 0.11, talkingTimer: null,
-      x: 100, y: 340, w: 300, h: 240, color: '#10b981',
-      furniture: 'twin-bed', micPos: { x: 370, y: 380 }, spkPos: { x: 370, y: 540 }
+      x: 80, y: 330, w: 320, h: 250, color: '#10b981', floorType: 'wood-light',
+      furniture: 'study-bed', micPos: { x: 370, y: 370 }, spkPos: { x: 370, y: 550 }
     },
     bed3: {
       id: 'bed3', name: 'Bedroom 3', priority: 4, muxCode: 'S0:0 S1:0 S2:1 (Y4)', state: 'idle', dcVoltage: 0.09, talkingTimer: null,
-      x: 430, y: 340, w: 320, h: 240, color: '#10b981',
-      furniture: 'cozy-bed', micPos: { x: 450, y: 380 }, spkPos: { x: 720, y: 540 }
+      x: 420, y: 330, w: 360, h: 250, color: '#10b981', floorType: 'wood-dark',
+      furniture: 'queen-suite', micPos: { x: 440, y: 370 }, spkPos: { x: 750, y: 550 }
     },
     bed4: {
       id: 'bed4', name: 'Bedroom 4', priority: 4, muxCode: 'S0:1 S1:0 S2:1 (Y5)', state: 'idle', dcVoltage: 0.10, talkingTimer: null,
-      x: 780, y: 340, w: 270, h: 240, color: '#10b981',
-      furniture: 'modern-bed', micPos: { x: 800, y: 380 }, spkPos: { x: 1020, y: 540 }
+      x: 800, y: 330, w: 300, h: 250, color: '#10b981', floorType: 'wood-light',
+      furniture: 'modern-bed', micPos: { x: 820, y: 370 }, spkPos: { x: 1070, y: 550 }
     }
   };
 
-  // Central Arduino Matrix Hub position
-  const hubPos = { x: 575, y: 310 };
+  // Central Arduino Matrix Hub position in hallway
+  const hubPos = { x: 590, y: 300 };
 
   // Particles array for signal flows
   let signalParticles = [];
@@ -127,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Room Triggers
     Object.keys(rooms).forEach(rId => {
       document.getElementById(`trig-${rId}`)?.addEventListener('click', () => {
-        triggerRoomTalk(rId, 3500);
+        triggerRoomTalk(rId, 3800);
       });
     });
 
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Osc Controls
     document.getElementById('osc-btn-voice')?.addEventListener('click', () => {
-      if (!activeTransmitter) triggerRoomTalk('kitchen', 3500);
+      if (!activeTransmitter) triggerRoomTalk('kitchen', 3800);
     });
     document.getElementById('osc-btn-clear')?.addEventListener('click', resetAllRooms);
   }
@@ -159,34 +158,32 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- CORE PRIORITY MATRIX RESOLVER ---
-  function triggerRoomTalk(roomId, durationMs = 3500) {
+  function triggerRoomTalk(roomId, durationMs = 3800) {
     initWebAudio();
     const candidate = rooms[roomId];
     if (!candidate) return;
 
-    // Check Priority against active transmitter
+    // Priority Check
     if (activeTransmitter && activeTransmitter.id !== roomId) {
       if (candidate.priority < activeTransmitter.priority) {
-        // Candidate HAS HIGHER PRIORITY (Lower number = Higher Priority) -> OVERRIDE!
+        // Candidate HAS HIGHER PRIORITY -> OVERRIDE!
         console.log(`[PRIORITY OVERRIDE] ${candidate.name} (Prio ${candidate.priority}) overrides ${activeTransmitter.name}`);
         rooms[activeTransmitter.id].state = 'overridden';
         playChimeSound(880);
       } else {
-        // Candidate HAS LOWER OR EQUAL PRIORITY -> REJECTED / MUTED!
+        // Candidate HAS LOWER PRIORITY -> MUTED!
         console.log(`[PRIORITY REJECTED] ${candidate.name} blocked by ${activeTransmitter.name}`);
         rooms[roomId].state = 'muted';
         return;
       }
     }
 
-    // Set new active transmitter
     activeTransmitter = candidate;
     candidate.state = 'talking';
-    candidate.dcVoltage = 3.85 + (Math.random() * 0.5); // Speech DC voltage 3.85V-4.35V DC
+    candidate.dcVoltage = 3.90 + (Math.random() * 0.45); // Speech DC voltage 3.9V-4.35V DC
 
     if (candidate.talkingTimer) clearTimeout(candidate.talkingTimer);
 
-    // Target receivers
     if (roomId === 'master') {
       targetReceivers = Object.keys(rooms).filter(id => id !== 'master');
     } else {
@@ -199,14 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Spawn Particles from Transmitter -> Hub -> Receivers
     spawnSignalParticles(candidate, targetReceivers);
-
     updateTelemetryHeader();
     updatePIPCameraHUD(candidate);
     playSpeechSynthAudio();
 
-    // Set Speech Hangover Timer
     candidate.talkingTimer = setTimeout(() => {
       endRoomTalk(roomId);
     }, durationMs);
@@ -255,8 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!activeTransmitter) {
       if (elActive) { elActive.textContent = 'IDLE / STANDBY'; elActive.className = 't-value'; }
       if (elMaxDc) elMaxDc.textContent = `${ambientNoiseFloor.toFixed(2)} V DC`;
-      if (elMux) elMux.textContent = 'S0:0 S1:0 S2:0 (INH:1)';
-      if (elPriority) { elPriority.textContent = 'NO CONFLICT'; elPriority.className = 't-value'; }
+      if (elMux) elMux.textContent = 'S0:0 S1:0 S2:0 (INH:1 - Muted)';
+      if (elPriority) { elPriority.textContent = 'STANDBY MODE'; elPriority.className = 't-value'; }
     } else {
       if (elActive) {
         elActive.textContent = `${activeTransmitter.name.toUpperCase()}`;
@@ -286,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!pip || !room) return;
 
     pip.classList.add('active');
-    if (title) title.innerHTML = `<i class="fa-solid fa-camera"></i> LIVE ROOM FEED: ${room.name.toUpperCase()}`;
+    if (title) title.innerHTML = `<i class="fa-solid fa-video"></i> LIVE ROOM FEED: ${room.name.toUpperCase()}`;
     if (status) {
       status.textContent = '🎙️ TRANSMITTING VOICE';
       status.className = 'pip-status-badge';
@@ -300,30 +294,30 @@ document.addEventListener('DOMContentLoaded', () => {
     signalParticles = [];
     const tPos = transmitter.micPos;
 
-    // Particles from Mic to Hub
-    for (let i = 0; i < 15; i++) {
+    // Mic to Hub
+    for (let i = 0; i < 18; i++) {
       signalParticles.push({
         sx: tPos.x, sy: tPos.y,
         tx: hubPos.x, ty: hubPos.y,
         progress: Math.random(),
-        speed: 0.015 + Math.random() * 0.01,
+        speed: 0.018 + Math.random() * 0.01,
         color: transmitter.color,
-        size: 3 + Math.random() * 3
+        size: 3.5 + Math.random() * 2.5
       });
     }
 
-    // Particles from Hub to Receiver Speakers
+    // Hub to Receiver Speakers
     receivers.forEach(rId => {
       const rec = rooms[rId];
       if (!rec) return;
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 14; i++) {
         signalParticles.push({
           sx: hubPos.x, sy: hubPos.y,
           tx: rec.spkPos.x, ty: rec.spkPos.y,
           progress: Math.random(),
-          speed: 0.015 + Math.random() * 0.01,
+          speed: 0.018 + Math.random() * 0.01,
           color: rec.color,
-          size: 2.5 + Math.random() * 2.5
+          size: 3 + Math.random() * 2
         });
       }
     });
@@ -350,7 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function startCinematicVideoWalkthrough() {
     if (autoVideoMode) return;
     autoVideoMode = true;
-    videoStep = 0;
 
     document.querySelector('.nav-btn[data-tab="simulator"]')?.click();
     const banner = document.getElementById('video-banner');
@@ -360,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (banner) banner.classList.add('active');
 
-    // Step 1: Camera Focus on Kitchen Call
+    // Scene 1
     vbTitle.textContent = "CINEMATIC WALKTHROUGH: SCENE 1 / 3";
     vbDesc.textContent = "Kitchen initiates voice intercom call to Bedroom 2 (Priority 3). Voice converts to 3.92V DC signal...";
     if (vbFill) vbFill.style.width = "30%";
@@ -368,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setCamMode('zoom', document.getElementById('cam-zoom'));
     runScenarioKitchenToBed2();
 
-    // Step 2: Emergency Override
+    // Scene 2
     setTimeout(() => {
       vbTitle.textContent = "CINEMATIC WALKTHROUGH: SCENE 2 / 3";
       vbDesc.textContent = "Master Bedroom interrupts with Priority 1 Emergency Override! Kitchen is muted instantly.";
@@ -377,10 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
       triggerRoomTalk('master', 4500);
     }, 4500);
 
-    // Step 3: Wrap up
+    // Scene 3
     setTimeout(() => {
       vbTitle.textContent = "CINEMATIC WALKTHROUGH: COMPLETE";
-      vbDesc.textContent = "Audio hold-timer expires. Channel returns to idle standby mode.";
+      vbDesc.textContent = "Audio hold-timer expires. Channel returns to standby mode.";
       if (vbFill) vbFill.style.width = "100%";
       setCamMode('iso', document.getElementById('cam-iso'));
     }, 9000);
@@ -392,14 +385,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 12000);
   }
 
-  // --- MASTER 3D RENDERING LOOP ---
+  // --- MASTER ARCHITECTURAL 3D RENDERING ENGINE ---
   function startMaster3DRenderLoop() {
     function render() {
       wavePhase += 0.12;
       particlePhase += 0.05;
 
       if (ctx3d && mainCanvas) {
-        draw3DScene(ctx3d, mainCanvas.width, mainCanvas.height);
+        drawArchitectural3DHouse(ctx3d, mainCanvas.width, mainCanvas.height);
       }
 
       if (pipSpectrumCtx && pipSpectrumCanvas) {
@@ -411,58 +404,56 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
   }
 
-  function draw3DScene(ctx, width, height) {
+  function drawArchitectural3DHouse(ctx, width, height) {
     ctx.clearRect(0, 0, width, height);
 
-    // Apply Camera Perspective Offset
     ctx.save();
     if (cameraMode === 'iso') {
-      ctx.translate(width / 2, height / 2 - 20);
-      ctx.scale(0.95, 0.75);
-      ctx.rotate(-0.06);
+      ctx.translate(width / 2, height / 2 - 15);
+      ctx.scale(0.95, 0.76);
+      ctx.rotate(-0.05);
       ctx.translate(-width / 2, -height / 2);
     } else if (cameraMode === 'zoom' && activeTransmitter) {
       const t = activeTransmitter;
       ctx.translate(width / 2 - (t.x + t.w / 2), height / 2 - (t.y + t.h / 2));
-      ctx.scale(1.2, 1.2);
+      ctx.scale(1.25, 1.25);
     }
 
-    // 1. Draw 3D House Base Floor Grid
-    ctx.fillStyle = nightMode ? '#070c1a' : '#0f172a';
-    ctx.fillRect(50, 40, 1050, 580);
+    // 1. Draw Exterior Foundation Slab
+    ctx.fillStyle = nightMode ? '#070c18' : '#0e172a';
+    ctx.fillRect(40, 30, 1100, 620);
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#1e293b';
+    ctx.strokeRect(40, 30, 1100, 620);
 
-    // Floor Grid Lines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-    ctx.lineWidth = 1;
-    for (let x = 50; x <= 1100; x += 40) {
-      ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x, 620); ctx.stroke();
-    }
-    for (let y = 40; y <= 620; y += 40) {
-      ctx.beginPath(); ctx.moveTo(50, y); ctx.lineTo(1100, y); ctx.stroke();
-    }
-
-    // 2. Draw Animated Conduit Wall Cables
+    // 2. Draw Wire Conduit Laser Wires
     if (showConduits) {
       Object.keys(rooms).forEach(rId => {
         const room = rooms[rId];
         ctx.beginPath();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = room.state === 'talking' ? room.color : (room.state === 'listening' ? '#38bdf8' : 'rgba(255,255,255,0.08)');
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = room.state === 'talking' ? room.color : (room.state === 'listening' ? '#38bdf8' : 'rgba(255,255,255,0.06)');
+        ctx.shadowColor = room.state === 'talking' ? room.color : 'transparent';
+        ctx.shadowBlur = 10;
         ctx.moveTo(room.micPos.x, room.micPos.y);
         ctx.lineTo(hubPos.x, hubPos.y);
         ctx.stroke();
+        ctx.shadowBlur = 0;
       });
     }
 
-    // 3. Draw Individual 3D Rooms
+    // 3. Draw Rooms with Architectural Flooring & Furniture
     Object.keys(rooms).forEach(rId => {
-      drawRoom3D(ctx, rooms[rId]);
+      drawRoomArchitecturalInterior(ctx, rooms[rId]);
     });
 
-    // 4. Draw Central Arduino Matrix Hub
+    // 4. Draw Thick 3D Structural Walls & Door Openings
+    drawArchitecturalWalls(ctx);
+
+    // 5. Draw Central Arduino Matrix Hub
     drawCentralHub3D(ctx, hubPos.x, hubPos.y);
 
-    // 5. Draw Animated Signal Particles
+    // 6. Draw Animated Signal Particles
     signalParticles.forEach(p => {
       p.progress += p.speed;
       if (p.progress > 1) p.progress = 0;
@@ -474,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.arc(px, py, p.size, 0, Math.PI * 2);
       ctx.fillStyle = p.color;
       ctx.shadowColor = p.color;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 12;
       ctx.fill();
       ctx.shadowBlur = 0;
     });
@@ -482,50 +473,138 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.restore();
   }
 
-  function drawRoom3D(ctx, room) {
-    const { x, y, w, h, name, priority, color, state, dcVoltage, furniture } = room;
+  function drawRoomArchitecturalInterior(ctx, room) {
+    const { x, y, w, h, name, priority, color, state, dcVoltage, floorType, furniture } = room;
 
-    // Room Floor Texture
-    ctx.fillStyle = state === 'talking' ? 'rgba(16, 185, 129, 0.12)' : (state === 'listening' ? 'rgba(56, 189, 248, 0.12)' : (state === 'overridden' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(15, 23, 42, 0.8)'));
-    ctx.fillRect(x, y, w, h);
+    // Floor Base Texture
+    if (floorType === 'marble-tile') {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.lineWidth = 1;
+      for (let tx = x; tx < x + w; tx += 40) {
+        ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + h); ctx.stroke();
+      }
+      for (let ty = y; ty < y + h; ty += 40) {
+        ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x + w, ty); ctx.stroke();
+      }
+    } else if (floorType === 'wood-dark') {
+      ctx.fillStyle = '#0e1726';
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeStyle = 'rgba(120, 80, 40, 0.15)';
+      ctx.lineWidth = 1;
+      for (let ty = y; ty < y + h; ty += 25) {
+        ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x + w, ty); ctx.stroke();
+      }
+    } else {
+      ctx.fillStyle = '#111c30';
+      ctx.fillRect(x, y, w, h);
+    }
 
-    // Room 3D Wall Boundaries
-    ctx.lineWidth = state === 'talking' ? 3 : 2;
-    ctx.strokeStyle = state === 'talking' ? '#10b981' : (state === 'listening' ? '#38bdf8' : (state === 'overridden' ? '#ef4444' : 'rgba(255, 255, 255, 0.12)'));
-    ctx.strokeRect(x, y, w, h);
+    // Active Room Glow Overlay
+    if (state === 'talking') {
+      const grad = ctx.createRadialGradient(x + w / 2, y + h / 2, 20, x + w / 2, y + h / 2, w / 1.4);
+      grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+      grad.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, y, w, h);
+    } else if (state === 'listening') {
+      const grad = ctx.createRadialGradient(x + w / 2, y + h / 2, 20, x + w / 2, y + h / 2, w / 1.4);
+      grad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
+      grad.addColorStop(1, 'rgba(56, 189, 248, 0.02)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, y, w, h);
+    } else if (state === 'overridden') {
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+      ctx.fillRect(x, y, w, h);
+    }
 
-    // Room Header & Badge
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(x + 8, y + 8, w - 16, 26);
-
+    // Room Label Header
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+    ctx.fillRect(x + 10, y + 10, w - 20, 26);
     ctx.fillStyle = '#f8fafc';
     ctx.font = 'bold 12px "Outfit", sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(name, x + 16, y + 25);
+    ctx.fillText(name, x + 18, y + 27);
 
     ctx.fillStyle = color;
     ctx.font = 'bold 10px "JetBrains Mono", monospace';
     ctx.textAlign = 'right';
-    ctx.fillText(`PRIO ${priority}`, x + w - 16, y + 25);
+    ctx.fillText(`PRIO ${priority}`, x + w - 18, y + 27);
 
-    // Furniture Graphic Representations
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    ctx.lineWidth = 1;
-    if (furniture === 'king-bed' || furniture === 'twin-bed' || furniture === 'cozy-bed' || furniture === 'modern-bed') {
-      ctx.strokeRect(x + 30, y + 50, 100, 130);
-      ctx.fillRect(x + 35, y + 55, 40, 25);
-      ctx.fillRect(x + 85, y + 55, 40, 25);
-    } else if (furniture === 'living-sofa') {
-      ctx.strokeRect(x + 30, y + 60, 160, 50);
-      ctx.strokeRect(x + 80, y + 130, 80, 40);
-    } else if (furniture === 'kitchen-counter') {
-      ctx.fillRect(x + 20, y + 50, 160, 30);
-      ctx.strokeRect(x + 40, y + 110, 100, 40);
+    // Realistic Furniture Drawing
+    ctx.save();
+    if (furniture === 'king-bed-suite') {
+      // Area Rug
+      ctx.fillStyle = 'rgba(168, 85, 247, 0.1)';
+      ctx.fillRect(x + 30, y + 60, 140, 150);
+      // King Bed
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(x + 40, y + 70, 110, 130);
+      // Headboard
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(x + 40, y + 70, 110, 20);
+      // Pillows
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(x + 48, y + 75, 40, 12);
+      ctx.fillRect(x + 102, y + 75, 40, 12);
+      // Nightstands
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(x + 10, y + 70, 25, 25);
+      ctx.fillRect(x + 155, y + 70, 25, 25);
+      // Lamps
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.arc(x + 22, y + 82, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + 167, y + 82, 5, 0, Math.PI * 2); ctx.fill();
+    } else if (furniture === 'living-lounge') {
+      // Rug
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.1)';
+      ctx.fillRect(x + 40, y + 60, 220, 140);
+      // L-Shaped Sectional Sofa
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(x + 50, y + 70, 180, 45);
+      ctx.fillRect(x + 185, y + 115, 45, 75);
+      // Coffee Table
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(x + 80, y + 130, 80, 40);
+      // TV Unit
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(x + 50, y + 215, 140, 15);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(x + 70, y + 220, 100, 4);
+    } else if (furniture === 'kitchen-island') {
+      // Kitchen Counter Island
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(x + 30, y + 60, 180, 45);
+      // Sink
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(x + 50, y + 70, 35, 25);
+      // Cooktop
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(x + 140, y + 70, 40, 25);
+      // Stools
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.arc(x + 60, y + 125, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + 110, y + 125, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + 160, y + 125, 8, 0, Math.PI * 2); ctx.fill();
+    } else {
+      // Generic Bed & Study Setup
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(x + 40, y + 70, 90, 120);
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(x + 40, y + 70, 90, 18);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(x + 48, y + 74, 32, 10);
+      ctx.fillRect(x + 90, y + 74, 32, 10);
+      // Study Desk
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(x + 160, y + 140, 90, 40);
     }
+    ctx.restore();
 
     // Hardware Wall Box (Mic + VAD Meter + LM386 + Speaker)
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.strokeStyle = state === 'talking' ? '#10b981' : 'rgba(56, 189, 248, 0.3)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.strokeStyle = state === 'talking' ? '#10b981' : 'rgba(56, 189, 248, 0.4)';
     ctx.lineWidth = 1.5;
     ctx.fillRect(room.micPos.x - 15, room.micPos.y - 15, 30, 30);
     ctx.strokeRect(room.micPos.x - 15, room.micPos.y - 15, 30, 30);
@@ -539,16 +618,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // DC Voltage Meter Tag
     ctx.fillStyle = '#f59e0b';
     ctx.font = 'bold 10px "JetBrains Mono", monospace';
-    ctx.fillText(`${dcVoltage.toFixed(2)}V DC`, x + w / 2, y + h - 14);
+    ctx.fillText(`${dcVoltage.toFixed(2)}V DC`, x + w / 2, y + h - 12);
 
-    // Animated Sound Ripples if Active
+    // Animated Sound Ripples
     if (state === 'talking' || state === 'listening') {
       ctx.beginPath();
-      ctx.arc(room.spkPos.x, room.spkPos.y, 15 + Math.sin(wavePhase * 2) * 8, 0, Math.PI * 2);
-      ctx.strokeStyle = state === 'talking' ? 'rgba(16, 185, 129, 0.5)' : 'rgba(56, 189, 248, 0.5)';
+      ctx.arc(room.spkPos.x, room.spkPos.y, 16 + Math.sin(wavePhase * 2) * 8, 0, Math.PI * 2);
+      ctx.strokeStyle = state === 'talking' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(56, 189, 248, 0.6)';
       ctx.lineWidth = 2;
       ctx.stroke();
     }
+  }
+
+  function drawArchitecturalWalls(ctx) {
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 8;
+
+    // Main Corridor Dividing Lines & Wall Openings
+    ctx.beginPath();
+    ctx.moveTo(80, 310); ctx.lineTo(1100, 310); // Horizontal Main Corridor Wall
+    ctx.moveTo(420, 70); ctx.lineTo(420, 580);   // Vertical Wall 1
+    ctx.moveTo(800, 70); ctx.lineTo(800, 580);   // Vertical Wall 2
+    ctx.stroke();
+
+    // Doorway Cutouts
+    ctx.strokeStyle = '#070c18';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(350, 310); ctx.lineTo(390, 310); // Master Doorway
+    ctx.moveTo(480, 310); ctx.lineTo(520, 310); // Hall Doorway
+    ctx.moveTo(850, 310); ctx.lineTo(890, 310); // Kitchen Doorway
+    ctx.stroke();
   }
 
   function drawCentralHub3D(ctx, x, y) {
@@ -557,10 +657,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.strokeStyle = activeTransmitter ? '#10b981' : '#38bdf8';
     ctx.lineWidth = 2.5;
     ctx.shadowColor = activeTransmitter ? '#10b981' : '#38bdf8';
-    ctx.shadowBlur = 15;
+    ctx.shadowBlur = 16;
 
-    ctx.fillRect(x - 60, y - 35, 120, 70);
-    ctx.strokeRect(x - 60, y - 35, 120, 70);
+    ctx.fillRect(x - 65, y - 35, 130, 70);
+    ctx.strokeRect(x - 65, y - 35, 130, 70);
     ctx.shadowBlur = 0;
 
     ctx.fillStyle = '#f8fafc';
@@ -581,7 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 0; i < bars; i++) {
       const isTalking = activeTransmitter !== null;
-      const h = isTalking ? (Math.sin(i * 0.4 + wavePhase) * 0.5 + 0.5) * height * 0.8 : (Math.random() * 6);
+      const h = isTalking ? (Math.sin(i * 0.4 + wavePhase) * 0.5 + 0.5) * height * 0.85 : (Math.random() * 5);
       ctx.fillStyle = isTalking ? (i % 2 === 0 ? '#38bdf8' : '#10b981') : '#334155';
       ctx.fillRect(i * barWidth, height - h, barWidth - 2, h);
     }
