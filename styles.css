@@ -1,13 +1,12 @@
 /* ==========================================================================
-   SMART MULTI-ROOM INTERCOM - 3D REAL-LIFE CINEMATIC EXPERIENCE
-   Design Theme: Ultra-Realistic Architectural 3D Dashboard
-   Fonts: Outfit, Plus Jakarta Sans, JetBrains Mono
+   SMART MULTI-ROOM INTERCOM - LUXURY 3D ARCHITECTURAL RESIDENCE
+   PBL Review 1 - Riddhi Lahoti (2510040078) | KLH University
    ========================================================================== */
 
 :root {
   --bg-dark: #070a13;
-  --bg-card: rgba(13, 19, 34, 0.85);
-  --bg-card-hover: rgba(22, 32, 56, 0.9);
+  --bg-card: rgba(13, 19, 34, 0.88);
+  --bg-card-hover: rgba(22, 32, 56, 0.95);
   --border-color: rgba(255, 255, 255, 0.08);
   --border-glow: rgba(56, 189, 248, 0.4);
 
@@ -16,22 +15,12 @@
   --color-primary-glow: rgba(56, 189, 248, 0.3);
   --color-success: #10b981;       /* Emerald Green */
   --color-warning: #f59e0b;       /* Amber DC Voltage */
-  --color-danger: #ef4444;        /* Priority 1 Crimson Override */
+  --color-danger: #ef4444;        /* Crimson Priority 1 Override */
   --color-purple: #a855f7;        /* Priority 1 Master */
 
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-dim: #64748b;
-
-  /* Priority Palette */
-  --prio-1-bg: rgba(168, 85, 247, 0.2);
-  --prio-1-border: #a855f7;
-  --prio-2-bg: rgba(56, 189, 248, 0.2);
-  --prio-2-border: #38bdf8;
-  --prio-3-bg: rgba(245, 158, 11, 0.2);
-  --prio-3-border: #f59e0b;
-  --prio-4-bg: rgba(16, 185, 129, 0.2);
-  --prio-4-border: #10b981;
 
   --font-main: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
@@ -61,7 +50,7 @@ body {
 
 /* Header Bar */
 .app-header {
-  background: rgba(7, 10, 19, 0.9);
+  background: rgba(7, 10, 19, 0.92);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
@@ -71,7 +60,7 @@ body {
 }
 
 .header-container {
-  max-width: 1500px;
+  max-width: 1550px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -185,7 +174,7 @@ body {
 
 /* Layout Containers */
 .main-content {
-  max-width: 1500px;
+  max-width: 1550px;
   margin: 20px auto;
   padding: 0 20px;
 }
@@ -293,6 +282,8 @@ body {
   border: 1px solid var(--border-color);
   color: var(--text-muted);
   border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-cam.active, .btn-cam:hover {
@@ -407,7 +398,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   color: #000;
 }
 
-/* 3D Main View */
+/* 3D Main View Stage */
 .sim-view-3d {
   display: flex;
   flex-direction: column;
@@ -446,7 +437,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 .canvas-3d-stage {
   position: relative;
   width: 100%;
-  height: 620px;
+  height: 640px;
   background: #030611;
   border: 1.5px solid var(--border-color);
   border-radius: 16px;
