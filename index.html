@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Multi-Room Analog Intercom | Interactive 3D Real-Life Experience</title>
+  <title>Smart Multi-Room Intercom | 3D Luxury Architectural Floorplan Experience</title>
   
   <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,11 +20,11 @@
     <div class="header-container">
       <div class="brand-logo">
         <div class="logo-icon">
-          <i class="fa-solid fa-house-laptop"></i>
+          <i class="fa-solid fa-house-chimney-window"></i>
         </div>
         <div class="logo-text">
-          <h1>SmartIntercom <span class="badge-3d">3D Cinematic Experience</span></h1>
-          <p class="subtitle">Multi-Room Analog Intercom with VAD & Priority Switching</p>
+          <h1>SmartIntercom <span class="badge-3d">Architectural 3D Home</span></h1>
+          <p class="subtitle">4BHK + Hall + Kitchen Multi-Room VAD & Priority Intercom</p>
         </div>
       </div>
 
@@ -37,7 +37,7 @@
 
       <nav class="nav-tabs">
         <button class="nav-btn active" data-tab="simulator">
-          <i class="fa-solid fa-cube"></i> 3D Virtual House
+          <i class="fa-solid fa-layer-group"></i> 3D Luxury Home
         </button>
         <button class="nav-btn" data-tab="pipeline">
           <i class="fa-solid fa-wave-square"></i> Voice-to-DC Pipeline
@@ -57,7 +57,7 @@
 
   <main class="main-content">
 
-    <!-- ==================== TAB 1: 3D VIRTUAL HOUSE SIMULATOR ==================== -->
+    <!-- ==================== TAB 1: 3D LUXURY HOME SIMULATOR ==================== -->
     <section id="tab-simulator" class="tab-pane active">
       
       <!-- Top Telemetry Header Bar -->
@@ -71,12 +71,12 @@
           <span class="t-value highlight-amber" id="tele-max-dc">0.12 V DC</span>
         </div>
         <div class="telemetry-item">
-          <span class="t-label"><i class="fa-solid fa-microchip"></i> CD4051 Mux Address</span>
-          <span class="t-value code-font" id="tele-mux-pins">S0:0 S1:0 S2:0 (INH:1)</span>
+          <span class="t-label"><i class="fa-solid fa-microchip"></i> CD4051 Mux Pin State</span>
+          <span class="t-value code-font" id="tele-mux-pins">S0:0 S1:0 S2:0 (INH:1 - Muted)</span>
         </div>
         <div class="telemetry-item">
-          <span class="t-label"><i class="fa-solid fa-shield-halved"></i> Priority Resolver</span>
-          <span class="t-value" id="tele-priority-status">NO CONFLICT</span>
+          <span class="t-label"><i class="fa-solid fa-shield-halved"></i> Priority Resolver Status</span>
+          <span class="t-value" id="tele-priority-status">STANDBY MODE</span>
         </div>
       </div>
 
@@ -85,19 +85,19 @@
         <!-- Left Sidebar: Controls & Interactive Room Triggers -->
         <aside class="sim-sidebar">
           
-          <!-- Camera & Rendering Mode Controls -->
+          <!-- Camera & Visual Style Controls -->
           <div class="card shadow">
             <div class="card-header">
-              <h3><i class="fa-solid fa-video"></i> 3D Camera & Visual Mode</h3>
+              <h3><i class="fa-solid fa-camera-rotate"></i> 3D Perspective Controls</h3>
             </div>
             <div class="camera-mode-buttons">
               <button class="btn btn-cam active" id="cam-iso"><i class="fa-solid fa-cube"></i> 3D Isometric</button>
-              <button class="btn btn-cam" id="cam-top"><i class="fa-solid fa-map"></i> Top-Down Plan</button>
+              <button class="btn btn-cam" id="cam-top"><i class="fa-solid fa-map"></i> Top Floorplan</button>
               <button class="btn btn-cam" id="cam-zoom"><i class="fa-solid fa-magnifying-glass"></i> Room Focus</button>
             </div>
             
             <div class="toggle-row margin-top-12">
-              <span><i class="fa-solid fa-moon"></i> Ambient Room Lights</span>
+              <span><i class="fa-solid fa-lightbulb"></i> Interior Room Lighting</span>
               <label class="switch">
                 <input type="checkbox" id="toggle-night-mode" checked>
                 <span class="slider round"></span>
@@ -105,7 +105,7 @@
             </div>
 
             <div class="toggle-row margin-top-8">
-              <span><i class="fa-solid fa-atom"></i> Animated Audio Conduits</span>
+              <span><i class="fa-solid fa-network-wired"></i> Laser Audio Conduits</span>
               <label class="switch">
                 <input type="checkbox" id="toggle-conduits" checked>
                 <span class="slider round"></span>
@@ -116,7 +116,7 @@
           <!-- Quick Test Scenarios -->
           <div class="card shadow margin-top-16">
             <div class="card-header">
-              <h3><i class="fa-solid fa-circle-play"></i> Interactive Scenarios</h3>
+              <h3><i class="fa-solid fa-circle-play"></i> Preset Test Scenarios</h3>
             </div>
             <div class="scenario-buttons">
               <button class="btn btn-outline" id="scen-kitchen-bed2">
@@ -137,7 +137,7 @@
           <!-- Room Intercom Quick Station List -->
           <div class="card shadow margin-top-16">
             <div class="card-header">
-              <h3><i class="fa-solid fa-building-user"></i> Trigger Room Intercom</h3>
+              <h3><i class="fa-solid fa-door-open"></i> Trigger Room Intercom</h3>
             </div>
             <div class="room-trigger-list">
               
@@ -205,7 +205,7 @@
             </div>
             
             <div class="toggle-row">
-              <span>Enable Real Audio Tones</span>
+              <span>Enable Real Audio Feedback</span>
               <label class="switch">
                 <input type="checkbox" id="toggle-real-audio" checked>
                 <span class="slider round"></span>
@@ -215,23 +215,23 @@
 
         </aside>
 
-        <!-- Main Center View: Animated 3D House Rendering & Interactive Overlay -->
+        <!-- Main Center View: Photorealistic 3D House Rendering Stage -->
         <main class="sim-view-3d card shadow">
           
           <div class="view-header">
             <div class="vh-title">
-              <h2><i class="fa-solid fa-house-signal"></i> 3D Real-Life Architectural House Intercom Model</h2>
-              <p>Watch voice soundwaves convert to DC signals and travel through animated wall conduits in real-time.</p>
+              <h2><i class="fa-solid fa-couch"></i> 4BHK + Hall + Kitchen Architectural 3D Residence</h2>
+              <p>Realistic room interiors with hardwood floors, furniture, warm lighting & dynamic audio signal routing.</p>
             </div>
             <div class="vh-controls">
-              <span class="live-tag"><i class="fa-solid fa-circle"></i> 60 FPS 3D ENGINE</span>
+              <span class="live-tag"><i class="fa-solid fa-circle"></i> HIGH-DEF 3D RENDER ENGINE</span>
             </div>
           </div>
 
           <!-- Interactive 3D Canvas Stage -->
           <div class="canvas-3d-stage" id="canvas-stage">
             
-            <canvas id="house-3d-canvas" width="1150" height="680"></canvas>
+            <canvas id="house-3d-canvas" width="1180" height="700"></canvas>
 
             <!-- Video Overlay Banner during Auto Demo Mode -->
             <div class="video-overlay-banner" id="video-banner">
@@ -246,7 +246,7 @@
             <!-- Floating Picture-in-Picture PIP Room Camera HUD -->
             <div class="pip-camera-hud" id="pip-camera">
               <div class="pip-header">
-                <span class="pip-title" id="pip-title"><i class="fa-solid fa-camera"></i> LIVE ROOM FEED: KITCHEN</span>
+                <span class="pip-title" id="pip-title"><i class="fa-solid fa-video"></i> LIVE ROOM FEED: KITCHEN</span>
                 <button class="pip-close" id="pip-close">&times;</button>
               </div>
               <div class="pip-body">
@@ -299,7 +299,6 @@
           <p>Explore how human speech (AC sound waves) is amplified, converted into a proportional DC voltage signal, and evaluated by Arduino to drive power speakers.</p>
         </div>
 
-        <!-- Interactive 5-Stage Electronics Pipeline -->
         <div class="pipeline-flow-grid">
           
           <div class="pipe-stage-card" id="stage-1">
@@ -352,7 +351,6 @@
 
         </div>
 
-        <!-- Oscilloscope -->
         <div class="oscilloscope-wrapper">
           <div class="osc-header">
             <h3><i class="fa-solid fa-chart-line"></i> Real-Time Signal Oscilloscope & DC Level Comparator</h3>
@@ -387,7 +385,6 @@
           <p>Official component list from <strong>KLH University - PBL Review 1 | Riddhi Lahoti (2510040078)</strong>.</p>
         </div>
 
-        <!-- Summary Cost Stat Cards -->
         <div class="stat-cards-grid">
           <div class="stat-card">
             <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
@@ -422,7 +419,6 @@
           </div>
         </div>
 
-        <!-- BOM Data Table -->
         <div class="table-responsive">
           <table class="bom-table" id="bom-table">
             <thead>
@@ -657,7 +653,7 @@
   </main>
 
   <footer class="app-footer">
-    <p>Smart Multi-Room Analog Intercom 3D Real-Life Experience &copy; 2026 | KLH University Project Based Learning (PBL Review 1) - Riddhi Lahoti (2510040078)</p>
+    <p>Smart Multi-Room Analog Intercom 3D Architectural Experience &copy; 2026 | KLH University Project Based Learning (PBL Review 1) - Riddhi Lahoti (2510040078)</p>
   </footer>
 
   <script src="app.js"></script>
